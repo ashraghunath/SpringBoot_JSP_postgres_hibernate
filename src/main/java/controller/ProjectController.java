@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import exceptionHandling.ResourceAllocatedException;
 import exceptionHandling.ResourceNotFoundException;
 import model.AvailableProject;
 import model.Employee;
 import model.Projects;
+import service.DepartmentService;
 import service.EmployeeService;
 import service.ProjectService;
 
@@ -35,10 +37,13 @@ public class ProjectController {
 	private final ProjectService projectService;
 	@Autowired
 	private final EmployeeService employeeService;
+	@Autowired
+	private final DepartmentService departmentService;
 
-	public ProjectController(ProjectService projectService, EmployeeService employeeService) {
+	public ProjectController(ProjectService projectService, EmployeeService employeeService, DepartmentService departmentService) {
 		this.projectService = projectService;
 		this.employeeService = employeeService;
+		this.departmentService = departmentService;
 	}
 
 	@RequestMapping("/deleteAvailableProject")
@@ -64,6 +69,15 @@ public class ProjectController {
 		}
 	}
 
+	@GetMapping("/allocateToProject")
+	public String allocateToProject(HttpServletRequest httpServletRequest) {
+		httpServletRequest.setAttribute("mode", "MODE_ALLOCATE");
+		httpServletRequest.setAttribute("userset", "YES");
+		httpServletRequest.setAttribute("availableProjects", projectService.getAllAvailableProjects());
+		httpServletRequest.setAttribute("employees", employeeService.getAllRegularEmployees());
+		return "welcomepage";
+	}
+	
 	@GetMapping("/showAvailableProjects")
 	public String showAllProjects(HttpServletRequest httpServletRequest, Authentication authentication) {
 		httpServletRequest.setAttribute("availibleprojects", projectService.getAllAvailableProjects());
@@ -106,6 +120,14 @@ public class ProjectController {
 		return "welcomepage";
 	}
 
+	@GetMapping("/registerAvailableProject")
+	public String registerProject(HttpServletRequest httpServletRequest) {
+		httpServletRequest.setAttribute("mode", "MODE_PREGISTER");
+		httpServletRequest.setAttribute("userset", "YES");
+		httpServletRequest.setAttribute("departments", departmentService.getAllDepartments());
+		return "welcomepage";
+	}
+	
 	@PostMapping("/registerNewAvailableProject")
 	public String addNewAvailableProject(@RequestParam String name, @RequestParam Date start_date,
 			@RequestParam Date end_date, @RequestParam String description, @RequestParam Integer department_id,

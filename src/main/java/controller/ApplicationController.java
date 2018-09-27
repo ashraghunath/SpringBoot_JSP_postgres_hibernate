@@ -64,15 +64,10 @@ public class ApplicationController implements WebMvcConfigurer {
 	public String registerDepartment(HttpServletRequest httpServletRequest) {
 		httpServletRequest.setAttribute("mode", "MODE_DREGISTER");
 		httpServletRequest.setAttribute("userset", "YES");
+		httpServletRequest.setAttribute("employees", employeeService.getAllEmployees());
 		return "welcomepage";
 	}
 
-	@GetMapping("/registerAvailableProject")
-	public String registerProject(HttpServletRequest httpServletRequest) {
-		httpServletRequest.setAttribute("mode", "MODE_PREGISTER");
-		httpServletRequest.setAttribute("userset", "YES");
-		return "welcomepage";
-	}
 
 	@GetMapping("/login")
 	public String login(HttpServletRequest httpServletRequest) {
@@ -108,12 +103,7 @@ public class ApplicationController implements WebMvcConfigurer {
 		return "welcomepage";
 	}
 
-	@GetMapping("/allocateToProject")
-	public String allocateToProject(HttpServletRequest httpServletRequest) {
-		httpServletRequest.setAttribute("mode", "MODE_ALLOCATE");
-		httpServletRequest.setAttribute("userset", "YES");
-		return "welcomepage";
-	}
+	
 
 	@GetMapping("/sendEmail")
 	public String sendEmail(Integer user_id, HttpServletRequest httpServletRequest, Authentication authentication) {

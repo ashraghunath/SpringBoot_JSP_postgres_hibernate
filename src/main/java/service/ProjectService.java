@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import exceptionHandling.ResourceNotFoundException;
 import model.AvailableProject;
@@ -22,6 +23,7 @@ import repository.ProjectsRepository;
  * @version 1.0
  * @since 3-9-18
  */
+@Transactional
 @Service
 public class ProjectService {
 

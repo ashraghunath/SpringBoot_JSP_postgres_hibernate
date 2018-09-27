@@ -62,7 +62,7 @@ public class ProjectControllerTest {
 	        viewResolver.setPrefix("/WEB-INF/jsp/");
 	        viewResolver.setSuffix(".jsp");
 	        
-     mockMvc = MockMvcBuilders.standaloneSetup(new ProjectController(projectService, null))
+     mockMvc = MockMvcBuilders.standaloneSetup(new ProjectController(projectService, null,null))
     		 .setViewResolvers(viewResolver)
     		 .build();
     }

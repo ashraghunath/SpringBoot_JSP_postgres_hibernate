@@ -82,15 +82,22 @@ public class EmployeeController {
 	
 	@GetMapping("/getAllEmployees")
 	public String getAllEmployees(HttpServletRequest httpServletRequest, Authentication authentication) {
-		httpServletRequest.setAttribute("employees", employeeService.getAllEmployees());
+		Employee employeeTemp = employeeService.findByemail(authentication.getName());
+		
+		
 		httpServletRequest.setAttribute("mode", "ALL_EMPLOYEES");
 		httpServletRequest.setAttribute("userset", "YES");
-		Employee employeeTemp = employeeService.findByemail(authentication.getName());
+		
 		if (employeeTemp.getRole().equals("admin")) {
 			httpServletRequest.setAttribute("role", "admin");
+			httpServletRequest.setAttribute("employees", employeeService.getAllEmployees());
+		}
+		if(employeeTemp.getRole().equals("employee")) {
+			httpServletRequest.setAttribute("employees", employeeService.getAllEmployees());
 		}
 		if (employeeTemp.getRole().equals("manager")) {
 			httpServletRequest.setAttribute("role", "manager");
+			httpServletRequest.setAttribute("employees", employeeService.getAllRegularEmployees());
 		}
 		return "welcomepage";
 	}

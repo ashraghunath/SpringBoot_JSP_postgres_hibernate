@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +68,16 @@ public class EmployeeService {
 		return employees;
 	}
 
+	public List<Employee> getAllRegularEmployees() {
+		List<Employee> employees = (List<Employee>) employeeRepository.findAll();
+		List<Employee> regularEmployees = new ArrayList<Employee>();
+		for(Employee employee : employees) {
+			if(employee.getRole().equals("employee"))
+				regularEmployees.add(employee);
+		}
+		return regularEmployees;
+	}
+	
 	public void deleteEmployee(Integer user_id) {
 		employeeRepository.deleteById(user_id);
 	}

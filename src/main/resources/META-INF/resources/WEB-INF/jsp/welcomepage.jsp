@@ -294,46 +294,29 @@
 						</thead>
 						<tbody>
 							<c:forEach var="employee" items="${employees}">
-								<c:if test="${role=='admin'}">
-									<tr>
-										<td>${employee.user_id}</td>
-										<td>${employee.fname}</td>
-										<td>${employee.lname}</td>
-										<td>${employee.email}</td>
-										<td>${employee.dob}</td>
-										<td>${employee.role}</td>
+
+								<tr>
+									<td>${employee.user_id}</td>
+									<td>${employee.fname}</td>
+									<td>${employee.lname}</td>
+									<td>${employee.email}</td>
+									<td>${employee.dob}</td>
+									<td>${employee.role}</td>
+									<c:if test="${role=='manager' or role=='admin'}">
 										<td><a href="/downloadfile?id=${employee.file.id}"><span
 												class="glyphicon glyphicon-download-alt"></span></a></td>
-										<c:if test="${role=='admin'}">
-											<td><a
-												href="/deleteEmployee?user_id=${employee.user_id}"
-												data-toggle="confirmation"
-												data-title="Employee allocated, send email to manager?"><span
-													class="glyphicon glyphicon-trash"></span></a></td>
-											<td><a data-toggle="confirmation"
-												data-title="Delete employee?"
-												href="/updateEmployee?user_id=${employee.user_id}"><span
-													class="glyphicon glyphicon-pencil"></span></a></td>
-										</c:if>
-									</tr>
-								</c:if>
-
-								<c:if test="${role=='manager'}">
-									<c:if
-										test="${employee.role!='manager' and employee.role!='admin'}">
-										<tr>
-											<td>${employee.user_id}</td>
-											<td>${employee.fname}</td>
-											<td>${employee.lname}</td>
-											<td>${employee.email}</td>
-											<td>${employee.dob}</td>
-											<td>${employee.role}</td>
-											<td><a href="/downloadfile?id=${employee.file.id}"><span
-													class="glyphicon glyphicon-download-alt"></span></a></td>
-										</tr>
 									</c:if>
-									
-								</c:if>
+									<c:if test="${role=='admin'}">
+										<td><a href="/deleteEmployee?user_id=${employee.user_id}"
+											data-toggle="confirmation"
+											data-title="Employee allocated, send email to manager?"><span
+												class="glyphicon glyphicon-trash"></span></a></td>
+										<td><a data-toggle="confirmation"
+											data-title="Delete employee?"
+											href="/updateEmployee?user_id=${employee.user_id}"><span
+												class="glyphicon glyphicon-pencil"></span></a></td>
+									</c:if>
+								</tr>
 
 							</c:forEach>
 						</tbody>
@@ -367,8 +350,9 @@
 								<th>Email</th>
 								<th>DOB</th>
 								<th>Role</th>
-								<th>project name</th>
-								<th>department</th>
+								<th>Project name</th>
+								<th>Department</th>
+								<th>Resume</th>
 							</tr>
 						</thead>
 						<tbody var="allocations">
@@ -380,6 +364,9 @@
 								<td>${allocations.employee.role}</td>
 								<td>${allocations.allocatedProject.name}</td>
 								<td>${allocations.department.departmentname}</td>
+								<td><a
+									href="/downloadfile?id=${allocations.employee.file.id}"><span
+										class="glyphicon glyphicon-download-alt"></span></a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -390,10 +377,11 @@
 		<c:when test="${mode=='MODE_EMPLOYEEDETAILSNULL'}">
 			<div class="container text-center" id="tasksDiv" var="allocations">
 				<c:if test="${allocations.role=='employee'}">
-				<h3>Welcome ${allocations.fname}(not allocated to any project)</h3>
+					<h3>Welcome ${allocations.fname}(not allocated to any project)</h3>
 				</c:if>
-				<c:if test="${allocations.role=='admin' or allocations.role=='manager'}">
-				<h3>Welcome ${allocations.fname}(${allocations.role})</h3>
+				<c:if
+					test="${allocations.role=='admin' or allocations.role=='manager'}">
+					<h3>Welcome ${allocations.fname}(${allocations.role})</h3>
 				</c:if>
 				<hr>
 				<div class="table-responsive">
@@ -405,6 +393,7 @@
 								<th>Email</th>
 								<th>DOB</th>
 								<th>Role</th>
+								<th>Resume</th>
 							</tr>
 						</thead>
 						<tbody var="allocations">
@@ -414,6 +403,8 @@
 								<td>${allocations.email}</td>
 								<td>${allocations.dob}</td>
 								<td>${allocations.role}</td>
+								<td><a href="/downloadfile?id=${allocations.file.id}"><span
+										class="glyphicon glyphicon-download-alt"></span></a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -544,13 +535,16 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-3">Department Manager
-							id</label>
+						<label class="control-label col-md-3">Department manager</label>
 						<div class="col-md-7">
-							<input type="text" class="form-control" name="user_id"
-								value="${user_id}" required />
+							<select name="user_id" class="form-control">
+								<c:forEach items="${employees}" var="employee">
+									<option value="${employee.user_id}">${employee.fname}&nbsp;--&nbsp;${employee.email}</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
+				
 					<div class="form-group ">
 						<input type="submit" class="btn btn-primary" value="Register" />
 					</div>
@@ -564,19 +558,26 @@
 				<hr>
 				<form class="form-horizontal" method="POST" action="addAllocation">
 					<div class="form-group">
-						<label class="control-label col-md-3">Enter project id</label>
+						<label class="control-label col-md-3">Choose project</label>
 						<div class="col-md-7">
-							<input type="text" class="form-control" name="a_id"
-								value="${a_id}" />
+							<select name="a_id" class="form-control">
+								<c:forEach items="${availableProjects}" var="availableProject">
+									<option value="${availableProject.a_id}">${availableProject.name}</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-3">Enter user id id</label>
+						<label class="control-label col-md-3">Choose employee</label>
 						<div class="col-md-7">
-							<input type="text" class="form-control" name="user_id"
-								value="${user_id}" />
+							<select name="user_id" class="form-control">
+								<c:forEach items="${employees}" var="employee">
+									<option value="${employee.user_id}">${employee.fname}</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
+				
 					<div class="form-group ">
 						<input type="submit" class="btn btn-primary" value="Allocate" />
 					</div>
@@ -623,8 +624,11 @@
 					<div class="form-group">
 						<label class="control-label col-md-3">project department</label>
 						<div class="col-md-7">
-							<input type="text" class="form-control" name="department_id"
-								value="${department_id}" />
+							<select name="department_id" class="form-control">
+								<c:forEach items="${departments}" var="department">
+									<option value="${department.department_id}">${department.departmentname}</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
 					<div class="form-group ">
