@@ -76,7 +76,6 @@ public class DepartmentController {
 	@PostMapping("/addNewDepartment")
 	public String addNewDepartment(@RequestParam String departmentname, @RequestParam Integer user_id,
 			HttpServletRequest httpServletRequest, Authentication authentication) throws ResourceNotFoundException {
-		System.out.println("in controller "+user_id);
 		try {
 			departmentService.saveNewDepartment(departmentname, user_id);
 			httpServletRequest.setAttribute("departments", departmentService.getAllDepartments());
@@ -103,7 +102,9 @@ public class DepartmentController {
 		try {
 			Employee employee = departmentService.getDepartmentById(department_id).getEmployee();
 			departmentService.deleteDepartment(department_id);
-			employee.setRole("employee");
+			
+			if(departmentService.getDepartmentByManager(employee)==null)
+					employee.setRole("employee");
 			employeeService.updateEmployee(employee);
 			httpServletRequest.setAttribute("departments", departmentService.getAllDepartments());
 			httpServletRequest.setAttribute("mode", "ALL_DEPARTMENTS");

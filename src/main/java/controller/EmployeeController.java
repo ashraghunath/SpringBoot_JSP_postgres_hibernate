@@ -12,16 +12,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import exceptionHandling.ResourceAllocatedException;
@@ -30,9 +31,9 @@ import model.Resume;
 import repository.AvailableProjectRepository;
 import repository.DepartmentRepository;
 import repository.EmployeeRepository;
-import repository.ResumeRepository;
 import repository.LoginRepository;
 import repository.ProjectsRepository;
+import repository.ResumeRepository;
 import service.EmployeeService;
 import service.LoginService;
 import service.ProjectService;
@@ -60,14 +61,17 @@ public class EmployeeController {
 	private final DepartmentRepository departmentRepository;
 	@Autowired
 	ResumeRepository fileRepository;
+	@Autowired
+	private InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
 	public EmployeeController(EmployeeService employeeService, LoginService loginService, ProjectService projectService,
-			DepartmentRepository departmentRepository, ResumeRepository fileRepository) {
+			DepartmentRepository departmentRepository, ResumeRepository fileRepository, InMemoryUserDetailsManager inMemoryUserDetailsManager) {
 		this.employeeService = employeeService;
 		this.loginService = loginService;
 		this.projectService = projectService;
 		this.departmentRepository = departmentRepository;
 		this.fileRepository = fileRepository;
+		this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
 	}
 
 	@GetMapping("/getEmployeeById")
@@ -115,9 +119,12 @@ public class EmployeeController {
 	    	fileRepository.save(filemode);
 	    	employee.setFile(filemode);
 			employeeService.saveEmployee(employee, password);
-			employeeService.saveEmployee(employee, password);
+			UserBuilder builder = User.withDefaultPasswordEncoder();
+			UserDetails user = builder.username(employee.getEmail())
+					.password(password).roles(employee.getRole()).build();
+			inMemoryUserDetailsManager.createUser(user);
 //		ApplicationContext ctx = new AnnotationConfigApplicationContext(SecurityConfiguration.class);
-//		InMemoryUserDetailsManager userDetailsManager = (InMemoryUserDetailsManager)ctx.getBean("userDManager");
+//		InMemoryUserDetailsManager userDetailsManager = (InMemoryUserDetailsManager)ctx.getBean("userDetailsManager");
 //		UserBuilder builder = User.withDefaultPasswordEncoder();
 //		UserDetails user = builder.username(employee.getEmail())
 //				.password(password).roles(employee.getRole()).build();

@@ -2,5 +2,9 @@
 	display: none;
 }
 
-.black-background {background-color:#000000;}
-.white {color:#ffffff;}
+.topcorner{
+    position:absolute;
+    top:100px;
+    right: 112px;
+ 
+ }

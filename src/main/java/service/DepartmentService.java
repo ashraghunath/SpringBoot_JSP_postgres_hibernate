@@ -54,6 +54,10 @@ public class DepartmentService {
 		return departmentRepository.findBydepartmentname(departmentname);
 	}
 	
+	public List<Department> getDepartmentByManager(Employee employee) {
+		return departmentRepository.findBymanager(employee);
+	}
+	
 	public void deleteDepartment(Integer department_id) {
 		departmentRepository.deleteById(department_id);
 	}

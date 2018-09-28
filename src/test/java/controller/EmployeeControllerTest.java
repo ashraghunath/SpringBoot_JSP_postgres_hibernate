@@ -51,7 +51,7 @@ public class EmployeeControllerTest {
 	        viewResolver.setPrefix("/WEB-INF/jsp/");
 	        viewResolver.setSuffix(".jsp");
 	        
-     mockMvc = MockMvcBuilders.standaloneSetup(new EmployeeController(empService,loginService,projectService, null,null))
+     mockMvc = MockMvcBuilders.standaloneSetup(new EmployeeController(empService,loginService,projectService, null,null,null))
     		 .setViewResolvers(viewResolver)
     		 .build();
     }

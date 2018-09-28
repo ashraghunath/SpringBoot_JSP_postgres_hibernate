@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -42,11 +40,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private LoginRepository loginRepository;
-
+	
 	public SecurityConfiguration(LoginRepository loginRepository) {
 		this.loginRepository = loginRepository;
 	}
-
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsManager() {
@@ -59,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				UserDetails user = builder.username(employee.getEmployee().getEmail())
 						.password(employee.getPasswordString()).roles(employee.getEmployee().getRole()).build();
 				userDetails.add(user);
-				
+
 			}
 			return new InMemoryUserDetailsManager(userDetails);
 		} catch (Exception e) {
@@ -68,16 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return null;
 
 	}
-//	
-//
-//	public String runThis() {
-//		ApplicationContext ctx = new AnnotationConfigApplicationContext(SecurityConfiguration.class);
-//		InMemoryUserDetailsManager userDetailsManager = (InMemoryUserDetailsManager)ctx.getBean("userDetailsManager");
-//		System.out.println(userDetailsManager.toString());
-//		return "success";
-//
-//	}
-//	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
@@ -85,9 +73,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.permitAll().antMatchers("/showDepartments").hasAnyRole("admin", "manager", "employee")
 				.antMatchers("/showAllocations").hasRole("manager").antMatchers("/getAllEmployees")
 				.hasAnyRole("admin", "manager", "employee").antMatchers("/welcome").permitAll().and().formLogin()
-				.loginPage("/login").defaultSuccessUrl("/details").failureUrl("/loginError").permitAll().and().httpBasic().disable().logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/").permitAll()
-				.and().exceptionHandling().accessDeniedPage("/accessDenied");
+				.loginPage("/login").defaultSuccessUrl("/details").failureUrl("/loginError").permitAll().and()
+				.httpBasic().disable().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/").permitAll().and().exceptionHandling().accessDeniedPage("/accessDenied");
 	}
 
 }

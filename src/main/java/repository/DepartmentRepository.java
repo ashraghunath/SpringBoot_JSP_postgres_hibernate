@@ -1,5 +1,7 @@
 package repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,6 @@ import model.Employee;
  */
 @Repository
 public interface DepartmentRepository extends CrudRepository<Department, Integer> {
-	public Department findBymanager(Employee manager);
+	public List<Department> findBymanager(Employee manager);
 	public Department findBydepartmentname(String departmentname);
 }

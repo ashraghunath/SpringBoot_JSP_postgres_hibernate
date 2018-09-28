@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import exceptionHandling.ResourceAllocatedException;
 import exceptionHandling.ResourceNotFoundException;
@@ -49,7 +48,6 @@ public class ProjectController {
 	@RequestMapping("/deleteAvailableProject")
 	public String delete(@RequestParam Integer a_id, HttpServletRequest httpServletRequest,
 			Authentication authentication) throws ResourceAllocatedException {
-		AvailableProject availableProjectTemp = projectService.getAvailableProjectById(a_id);
 		try {
 //		if (projectService.findAllByallocatedProject(availableProjectTemp) == null) {
 			projectService.deleteAvailableProject(a_id);

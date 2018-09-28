@@ -214,7 +214,7 @@
 
 							<input type="file" class="form-control" id="uploadfile"
 								placeholder="Upload File" name="uploadfile"></input>
-							<button type="button" class="btn btn-default" id="btnSubmit">Upload</button>
+							<!-- <button type="button" class="btn btn-default" id="btnSubmit">Upload</button> -->
 						</div>
 					</div>
 
@@ -262,7 +262,7 @@
 				<c:if test="${role=='manager'}">
 					<div class="form-group ">
 						<button type="button" onclick="location.href='/allocateToProject'"
-							class="btn btn-primary">Allocate</button>
+							class="btn btn-primary topcorner">Allocate</button>
 					</div>
 				</c:if>
 			</div>
@@ -508,8 +508,8 @@
 					<div>
 						<button type="button"
 							onclick="location.href='/registerDepartment'"
-							class="btn btn-primary">Add department</button>
-						<!--  <a href="/registerDepartment">Add new department</a> -->
+							class="btn btn-primary topcorner">Add department</button>
+						
 					</div>
 				</c:if>
 				<c:if test="${emailSent=='yes'}">
@@ -683,7 +683,7 @@
 					<div class="form-group ">
 						<button type="button"
 							onclick="location.href='/registerAvailableProject'"
-							class="btn btn-primary">Add project</button>
+							class="btn btn-primary topcorner">Add project</button>
 					</div>
 				</c:if>
 			</div>
